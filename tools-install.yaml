@@ -1,0 +1,27 @@
+---
+- name: Setting up FastQ-to-VCF tools
+  hosts: localhost
+  vars_prompt:
+  - name: group_dir
+    prompt: "Enter your full group directory path"
+    private: no
+  tasks:
+  - name: Create a Spack env
+    shell: 
+      cmd: spack env create myenv
+      chdir: "{{ spack_env_path }}"
+      creates: myenv
+  - name: Add tools to Spack env yaml file if not present on central system
+    shell: 
+      cmd: spack env activate myenv && spack add {{ item }}
+      chdir: /pawsey/sles12sp3/modulefiles/bio-apps
+      creates: "{{ item }}"
+    loop: "{{ tools }}"
+  - name: Install tools that are not on central system
+    shell: |
+      spack env activate myenv
+      spack concretize
+      spack install
+  # - name: Use Spack load for tools installed
+  #   shell:
+  #     cmd: 

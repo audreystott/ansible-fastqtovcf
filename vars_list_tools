@@ -1,0 +1,12 @@
+all:
+  hosts: local
+  vars:
+    group_dir: $MYGROUP
+    spack_env_path: {{ group_dir }}/spack/var/spack/environments/
+    tools: 
+      - bwa
+      - fastp
+      - gatk
+      - sambamba
+      - samblaster
+      - samtools
